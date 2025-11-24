@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flozen by MR.10 | Premium Online Shopping</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#000000',
+              muted: '#9AA0B2',
+              accent: '#FF7F50',
+              aqua: '#35C5F0',
+              violet: '#7A5CFF'
+            }
+          },
+          fontFamily: {
+            sans: ['Poppins','sans-serif'],
+            serif: ['Playfair Display','serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root{
+      --bg-start:#000000; /* deep black */
+      --bg-end:#0b0716;   /* subtle deep indigo to match brand */
+      --card-bg: rgba(24,24,29,0.95);
+      --muted:#9aa0b2;
+      --accent:#FF7F50;
+      --aqua:#35C5F0;
+      --violet:#7A5CFF;
+      --glass: rgba(255,255,255,0.03);
+      --glass-border: rgba(255,255,255,0.045);
+      --success: #2ecc71;
+      --danger: #e74c3c;
+    }
+    html,body{
+      background: linear-gradient(160deg,var(--bg-start) 0%, var(--bg-end) 120%);
+      color:#eee;
+      font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      min-height:100%;
+    }
+    body{overflow-x:hidden;scroll-behavior:smooth;}
+    ::selection{background:var(--accent);color:#fff;}
+    ::-webkit-scrollbar{width:10px;height:10px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.04);border-radius:6px;}
+    ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+    nav{transition:backdrop-filter .5s,background .3s;}
+    nav.scrolled{backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(20,18,33,0.45));box-shadow:0 3px 10px #0006;}
+    .text-gradient{background:linear-gradient(92deg,var(--violet),var(--aqua),var(--accent) 78%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .btn-glo{background:linear-gradient(90deg,var(--aqua),var(--violet));box-shadow:0 6px 20px rgba(122,92,255,0.08);border:none;color:#fff;}
+    .btn-glo:hover,.btn-glo:focus-visible{filter:brightness(1.04);box-shadow:0 6px 28px rgba(122,92,255,0.12);outline:none;}
+    .glass{background:var(--glass);backdrop-filter:blur(6px);border:1px solid var(--glass-border);}
+    .glass-card{background:var(--card-bg);box-shadow:0 6px 24px rgba(122,92,255,0.04);border:1px solid rgba(255,255,255,0.03);}
+    .hero-glow{position:absolute;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;}
+    .hero-glow .g1{position:absolute;width:520px;height:420px;background:radial-gradient(ellipse at 54% 58%,rgba(122,92,255,0.06) 0 40%, rgba(53,197,240,0.04) 41% 70%, transparent 100%);left:calc(50% - 260px);top:14%;animation:heroGlow 14s ease-in-out infinite alternate;filter:blur(14px);opacity:0.9;}
+    @keyframes heroGlow{0%{opacity:.45;}100%{opacity:1;}}
+    .marquee-content{display:inline-block;padding-left:2vw;min-width:230vw;animation:marqueeScroll 18s linear infinite;color:#fff;font-weight:800;letter-spacing:.05em;}
+    @keyframes marqueeScroll{to{transform:translateX(-46%);} }
+    .img-zoom{transition:transform .22s cubic-bezier(.2,.8,.2,1);will-change:transform;}
+    .img-zoom:hover{transform:scale(1.04) rotate(-0.6deg);}
+    .product-card{box-shadow:0 6px 22px rgba(122,92,255,0.04);border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);transform:translateY(0);transition:transform .26s ease,box-shadow .26s ease;}
+    .product-card .details{margin-top:12px;color:#c9cde6;font-size:.98rem;min-height:4.5em;}
+    .product-card:hover{box-shadow:0 10px 32px rgba(53,197,240,0.05);transform:translateY(-6px);}
+    .back-to-top{position:fixed;right:1.5rem;bottom:2.5rem;background:linear-gradient(90deg,var(--aqua),var(--violet));color:#fff;border-radius:100%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;z-index:150;box-shadow:0 3px 18px rgba(122,92,255,0.12);cursor:pointer;opacity:.8;transition:opacity .2s,transform .16s;}
+    .back-to-top:hover{opacity:1;transform:translateY(-4px);}
+    .wishlist-btn{position:absolute;top:.9rem;right:.9rem;background:rgba(0,0,0,0.12);border-radius:10px;padding:.28em .35em;font-size:1.1rem;color:#fff;border:none;outline:none;cursor:pointer;z-index:10;transition:color .12s,transform .08s;}
+    .wishlist-btn.loved{color:var(--accent);transform:scale(1.05);}
+    .cursor-dot,.cursor-outline{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;opacity:1 !important;will-change:transform;}
+    .cursor-dot{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(122,92,255,0.28);border:1.6px solid rgba(53,197,240,0.24);transition:transform .12s;transform:translate(-50%,-50%);}
+    .cursor-outline{width:34px;height:34px;border-radius:50%;border:2px solid rgba(53,197,240,0.85);background:rgba(34,36,57,0.04);box-shadow:0 0 8px rgba(122,92,255,0.12);transition:border .12s,background .12s;transform:translate(-50%,-50%);}
+    .always-cursor{opacity:1 !important;}
+    .badge-pop{position:absolute;left:.9rem;top:.9rem;background:linear-gradient(90deg,var(--accent),var(--aqua));color:#fff;font-weight:700;border-radius:8px;padding:6px 8px;font-size:.8rem;box-shadow:0 6px 12px rgba(53,197,240,0.05);}
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.04),rgba(255,255,255,0.02));background-size:200% 100%;animation:shimmer 1.2s linear infinite;border-radius:12px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .footer-bg{background:linear-gradient(92deg,#000 60%, #30184f 160%);}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+    /* Toasts */
+    .toast-wrap{position:fixed;right:1.25rem;bottom:1.25rem;z-index:99999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;}
+    .toast{pointer-events:auto;padding:.6rem .9rem;border-radius:12px;color:#fff;background:rgba(0,0,0,0.38);backdrop-filter:blur(4px);box-shadow:0 8px 20px rgba(0,0,0,0.45);display:flex;gap:.6rem;align-items:center;}
+    .toast.success{background:linear-gradient(90deg,var(--aqua),var(--violet));}
+    .toast.warn{background:linear-gradient(90deg,var(--accent),#e3a07b);}
+    .toast.error{background:linear-gradient(90deg,#ff6b6b,#e74c3c);}
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:99999;opacity:0;pointer-events:none;transition:opacity .18s;}
+    .lightbox.open{opacity:1;pointer-events:auto;}
+    .lightbox img{max-width:92%;max-height:86%;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.5);}
+    .lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.2rem;color:#fff;cursor:pointer;padding:.3rem .5rem;border-radius:8px;background:rgba(0,0,0,0.24);}
+    .lightbox .nav.left{left:1.25rem;}
+    .lightbox .nav.right{right:1.25rem;}
+    .settings-btn{position:fixed;left:1.25rem;bottom:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);padding:.5rem;border-radius:12px;z-index:9999;cursor:pointer;}
+    .kbd{background:#ffffff0f;padding:.08rem .35rem;border-radius:6px;border:1px solid rgba(255,255,255,0.04);font-weight:700;}
+    @media (max-width:768px){.cursor-dot,.cursor-outline{display:none}.back-to-top{display:none}}
+    /* Reveal animation (lightweight) */
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease, transform .6s ease;will-change:opacity,transform;}
+    .reveal.visible{opacity:1;transform:none;}
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .img-zoom:hover{transform:none}
+      .marquee-content{animation:none}
+      .reveal{transition:none}
+      .hero-glow{display:none}
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+  <!-- Custom Cursor (toggleable) -->
+  <div id="cursorDot" class="cursor-dot always-cursor" aria-hidden="true"></div>
+  <div id="cursorOutline" class="cursor-outline always-cursor" aria-hidden="true"></div>
+
+  <!-- Toast container -->
+  <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-label="Image viewer">
+    <button class="nav left" id="lbPrev" aria-label="Previous image">‹</button>
+    <img id="lbImg" src="" alt="Full product image">
+    <button class="nav right" id="lbNext" aria-label="Next image">›</button>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader-overlay fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-7xl md:text-9xl font-bold font-serif italic opacity-0" id="loader-text-1">Flozen</h1>
+        <h2 class="text-6xl md:text-9xl font-black text-brand-accent opacity-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" id="loader-text-2">MR.10</h2>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav id="main-nav" class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center text-white bg-transparent" role="navigation" aria-label="Main">
+    <div class="flex items-center gap-6">
+      <div class="text-3xl font-black tracking-tighter text-gradient drop-shadow" aria-hidden="true">FLOZEN</div>
+      <div class="hidden md:flex gap-6 text-sm font-semibold uppercase">
+        <a href="#home" class="hover:text-brand-accent transition">Home</a>
+        <a href="#products" class="hover:text-brand-accent transition">Shop</a>
+        <a href="#trending" class="hover:text-brand-accent transition">Trending</a>
+        <a href="#wishlist" id="open-wishlist" class="hover:text-brand-accent transition">Wishlist</a>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3" role="toolbar" aria-label="Top controls">
+      <button id="open-login" class="p-1 focus:outline-none" title="Account" aria-label="Account"> 
+        <svg class="w-7 h-7 text-white hover:text-brand-accent transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-width="2"/></svg>
+      </button>
+      <button id="open-cart" class="relative p-1 focus:outline-none" title="Cart" aria-label="Cart">
+        <svg class="w-8 h-8 text-white hover:text-brand-accent transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 3h2l.5 2M7 13h10l4-8H5.5" stroke-width="2"/><circle cx="9" cy="19" r="2" stroke-width="2"/><circle cx="17" cy="19" r="2" stroke-width="2"/></svg>
+        <span id="cart-count" class="absolute -top-1 -right-2 bg-brand-accent text-white text-xs font-bold px-2 py-0.5 rounded-full hidden" aria-live="polite">0</span>
+      </button>
+      <button id="open-orders" class="hidden md:inline-block px-3 py-2 text-sm rounded bg-white/6 hover:bg-white/8" title="Orders" aria-label="Orders">Orders</button>
+      <a href="tel:+923000000000" class="border border-white px-4 py-2 rounded-full font-bold btn-glo shadow hover:bg-white hover:text-black transition focus-visible:ring-2 focus-visible:ring-brand-accent ml-3">CALL</a>
+      <button id="theme-toggle" class="ml-2 border rounded-full w-10 h-10 flex items-center justify-center text-xl bg-black/30 hover:bg-black/50 transition" title="Toggle theme">🌙</button>
+    </div>
+  </nav>
+
+  <!-- Account/Login / Profile Modal -->
+  <div id="login-modal" class="fixed inset-0 bg-black/80 z-[9999] items-center justify-center hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="loginTitle">
+    <div id="loginModalPanel" class="glass w-[96vw] max-w-[520px] mx-auto p-6 rounded-2xl relative">
+      <button class="absolute top-4 right-4 text-3xl text-white/70 hover:text-white transition close-login" aria-label="Close login">&times;</button>
+      <div id="loginContent">
+        <h2 id="loginTitle" class="font-black text-gradient text-2xl mb-4">Sign in / Profile</h2>
+        <div id="profileView" class="hidden">
+          <p class="text-gray-300">Signed in as <span id="profileEmail" class="font-bold"></span></p>
+          <div class="mt-4 flex gap-3">
+            <button id="viewOrdersBtn" class="btn-glo py-2 px-4 rounded font-bold">My Orders</button>
+            <button id="logoutBtn" class="py-2 px-4 rounded border border-white/8">Logout</button>
+          </div>
+        </div>
+        <form id="login-form" class="flex flex-col gap-3">
+          <input type="email" id="user-email" required aria-label="Email address" class="rounded border px-4 py-2 bg-white/6 text-white focus:outline-brand-accent placeholder-gray-300" placeholder="Email address">
+          <input type="password" id="user-pass" required aria-label="Password" class="rounded border px-4 py-2 bg-white/6 text-white focus:outline-brand-accent placeholder-gray-300" placeholder="Password">
+          <button class="btn-glo rounded w-full py-3 font-black uppercase text-lg text-white shadow mt-2" type="submit">Login / Register</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlist Modal -->
+  <div id="wishlist-modal" class="fixed inset-0 bg-black/85 z-[9999] flex items-center justify-center hidden" role="dialog" aria-hidden="true">
+    <div class="glass max-w-xl w-full mx-6 p-6 rounded-2xl overflow-auto relative">
+      <button class="absolute top-3 right-5 text-3xl text-white/70 hover:text-brand-accent transition close-wishlist" title="Close" aria-label="Close wishlist">&times;</button>
+      <h2 class="font-black text-gradient text-3xl mb-4">Your Wishlist</h2>
+      <div id="wishlist-list" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Orders Modal -->
+  <div id="orders-modal" class="fixed inset-0 bg-black/85 z-[9999] flex items-center justify-center hidden" role="dialog" aria-hidden="true" aria-label="Your orders">
+    <div class="glass max-w-2xl w-full mx-6 p-6 rounded-2xl overflow-auto relative">
+      <button class="absolute top-3 right-5 text-3xl text-white/70 hover:text-brand-accent transition close-orders" title="Close" aria-label="Close orders">&times;</button>
+      <h2 class="font-black text-gradient text-3xl mb-4">My Orders</h2>
+      <div id="orders-list"></div>
+    </div>
+  </div>
+
+  <!-- Cart Sidebar -->
+  <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full sm:w-[420px] bg-[#000000cc] shadow-2xl z-[9999] translate-x-full transition-transform duration-400 ease-in-out flex flex-col" aria-hidden="true" role="region" aria-label="Shopping cart">
+    <div class="flex justify-between items-center border-b border-white/10 px-7 py-5">
+      <span class="font-black tracking-wider text-2xl">Your Cart</span>
+      <button id="close-cart" class="text-red-300 hover:text-red-500 text-3xl font-black" aria-label="Close cart">&times;</button>
+    </div>
+    <div id="cart-list" class="flex-1 px-5 py-3 overflow-y-auto"></div>
+    <div class="px-7 py-5 border-t border-white/10">
+      <div class="flex justify-between font-bold text-xl mb-2">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <div class="flex gap-3 items-center mb-3">
+        <input type="text" id="coupon-code" placeholder="Coupon code" class="bg-white/6 px-3 py-2 rounded w-2/3 text-white placeholder-gray-300">
+        <button id="apply-coupon" class="btn-glo px-4 py-2 rounded">Apply</button>
+      </div>
+      <button id="checkout-btn" class="w-full mt-1 rounded btn-glo py-3 text-white font-black text-lg shadow hover:scale-102 transition">Checkout</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden" style="z-index:2;">
+    <div class="hero-glow" aria-hidden="true"><div class="g1"></div></div>
+    <img src="https://images.unsplash.com/photo-1620760460330-0164c4149021?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-34 select-none pointer-events-none" loading="lazy" alt="">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#07061a66] to-[#000000]" style="z-index:2;"></div>
+    <div class="relative z-10 text-center px-6">
+      <p class="text-aqua tracking-[0.45em] text-base md:text-lg uppercase mb-5 hero-anim font-bold">The Ultimate Choice</p>
+      <h1 class="text-7xl md:text-[10vw] font-serif font-black tracking-tighter hero-anim drop-shadow-lg">FLOZEN</h1>
+      <h2 class="text-4xl md:text-6xl font-serif italic hero-anim -mt-5 mb-2 text-gradient">by MR.10</h2>
+      <p class="max-w-2xl mx-auto text-gray-300 text-lg mt-10 mb-9 font-medium hero-anim">Premium gadgets, streetwear & lifestyle products delivered worldwide with trust & speed.</p>
+      <a href="#products" class="btn-glo py-4 px-12 rounded-full font-black text-xl uppercase shadow-lg text-white tracking-widest inline-block hero-anim hover:scale-105 transition">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="bg-gradient-to-r from-brand-accent via-brand-violet to-brand-aqua py-4 -rotate-1 z-20 border-y border-black relative overflow-x-hidden">
+    <div class="marquee-container overflow-hidden whitespace-nowrap">
+      <div class="marquee-content uppercase">
+        ★ FLOZEN MR.10 • LIMITED DROPS • FAST SHIPPING • 100% AUTHENTIC • SECURE PAYMENT ★ FLOZEN MR.10 • LIMITED DROPS • FAST SHIPPING • 100% AUTHENTIC • SECURE PAYMENT ★
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section id="products" class="py-24 px-6 md:px-20">
+    <div class="max-w-7xl mx-auto text-center mb-12">
+      <h2 class="text-4xl md:text-6xl font-black text-gradient mb-4 drop-shadow-lg">Featured Drops</h2>
+      <p class="text-lg text-gray-300 mb-2">Handpicked. Limited. Legendary.</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-end mb-6">
+      <input id="search-input" type="search" placeholder="🔍 Search products..." class="flex-1 bg-white/6 px-5 py-3 rounded-xl border border-white/8 text-lg text-white focus:outline-brand-aqua placeholder-gray-300 transition" aria-label="Search products" />
+      <select id="category-filter" class="bg-white/6 px-4 py-3 rounded-xl border border-white/8 text-white text-lg focus:outline-brand-aqua transition">
+        <option value="">All Categories</option>
+      </select>
+      <select id="sort-select" class="bg-white/6 px-4 py-3 rounded-xl border border-white/8 text-white text-lg focus:outline-brand-aqua transition">
+        <option value="">Sort By</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="title-asc">Title: A → Z</option>
+        <option value="title-desc">Title: Z → A</option>
+        <option value="popularity-desc">Popularity: High → Low</option>
+        <option value="popularity-asc">Popularity: Low → High</option>
+      </select>
+    </div>
+
+    <div class="max-w-7xl mx-auto mb-8 px-4">
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="flex gap-3 items-center">
+          <label for="price-range" class="text-sm text-gray-300">Max Price</label>
+          <input id="price-range" type="range" min="0" max="1000" step="1" class="h-2 w-48" aria-label="Max price slider">
+          <span id="price-range-value" class="text-sm text-brand-aqua font-bold ml-2">$1000</span>
+        </div>
+        <div class="text-sm text-gray-300">Tip: Press <span class="kbd">/</span> to focus search</div>
+      </div>
+    </div>
+
+    <div id="products-container" class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+      <div class="skeleton h-96 rounded-2xl"></div>
+      <div class="skeleton h-96 rounded-2xl"></div>
+      <div class="skeleton h-96 rounded-2xl"></div>
+    </div>
+  </section>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="fixed inset-0 bg-black/95 z-[9999] items-center justify-center hidden" role="dialog" aria-hidden="true" aria-label="Checkout">
+    <div class="glass max-w-3xl w-full mx-6 p-6 md:p-10 rounded-3xl max-h-[90vh] overflow-y-auto relative">
+      <button class="absolute top-4 right-6 text-3xl text-white/70 hover:text-white transition close-checkout" aria-label="Close checkout">&times;</button>
+      <h2 class="font-black text-3xl text-gradient mb-4">Checkout</h2>
+      <div id="checkout-body">
+        <div id="checkout-items" class="space-y-3 mb-4"></div>
+        <div class="flex items-center gap-3 mb-4">
+          <label class="text-gray-300 w-28">Email</label>
+          <input id="checkout-email" class="flex-1 bg-white/6 px-3 py-2 rounded" placeholder="you@example.com">
+        </div>
+        <div class="flex items-center gap-3 mb-4">
+          <label class="text-gray-300 w-28">Phone</label>
+          <input id="checkout-phone" class="flex-1 bg-white/6 px-3 py-2 rounded" placeholder="+965...">
+        </div>
+        <div class="flex items-center gap-3 mb-2">
+          <label class="text-gray-300 w-28">Coupon</label>
+          <input id="checkout-coupon" class="flex-1 bg-white/6 px-3 py-2 rounded" placeholder="Enter coupon">
+        </div>
+        <div class="text-sm text-gray-400 mb-4">Available demo coupons: <b>FLO10</b> (10% off), <b>WELCOME5</b> ($5 off).</div>
+        <div class="flex justify-between items-center font-bold text-xl mb-4">
+          <span>Total</span><span id="checkout-total">$0.00</span>
+        </div>
+        <div class="flex gap-3">
+          <button id="place-order" class="btn-glo px-6 py-3 rounded font-bold">Place Order</button>
+          <button id="order-whatsapp" class="bg-green-600 px-6 py-3 rounded text-white font-bold">WhatsApp</button>
+          <button id="order-mail" class="bg-brand-aqua px-6 py-3 rounded text-white font-bold">Email</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="fixed inset-0 bg-black/95 z-[9999] items-center justify-center hidden" role="dialog" aria-hidden="true">
+    <div class="glass max-w-6xl w-full mx-6 p-8 md:p-12 rounded-3xl max-h-[95vh] overflow-y-auto relative" id="productModalPanel">
+      <button class="absolute top-6 right-6 text-5xl text-white/70 hover:text-white transition close-modal" aria-label="Close product">&times;</button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div>
+          <img id="modal-img" src="" class="w-full rounded-2xl shadow-2xl img-zoom cursor-pointer transition-transform duration-500" alt="Product image">
+          <p class="text-center mt-4 text-sm text-gray-400">Click image to view full size</p>
+        </div>
+        <div>
+          <h2 id="modal-title" class="text-3xl md:text-4xl font-black mb-4 text-gradient"></h2>
+          <p id="modal-price" class="text-brand-accent text-3xl font-bold mb-4"></p>
+          <div id="modal-desc" class="text-base text-gray-200 mb-6"></div>
+          <div class="flex gap-3 mb-5 items-center">
+            <label class="text-gray-300">QTY:</label>
+            <button class="qty-btn border border-white/30 px-3 py-2 rounded-lg hover:bg-white/10" id="decr-qty" aria-label="Decrease quantity">-</button>
+            <span id="qty" class="text-2xl font-bold w-12 text-center">1</span>
+            <button class="qty-btn border border-white/30 px-3 py-2 rounded-lg hover:bg-white/10" id="incr-qty" aria-label="Increase quantity">+</button>
+          </div>
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button id="modal-whatsapp" class="bg-green-500 text-white flex items-center gap-2 font-bold py-3 rounded-xl text-lg hover:bg-green-600 btn-glo transition justify-center">Order via WhatsApp</button>
+            <button id="modal-gmail" class="bg-brand-aqua text-white font-bold py-3 rounded-xl text-lg hover:bg-blue-600 btn-glo transition flex items-center justify-center gap-2">Order via Gmail</button>
+          </div>
+          <p class="text-gray-400 text-base">Select your preferred channel to order instantly. Or visit the cart for bulk checkout.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-bg text-white py-10 px-4 md:px-0 border-t border-brand-accent/30 mt-16">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10">
+      <div class="flex-1 text-lg mb-4 md:mb-0">
+        <b class="text-gradient text-2xl">Flozen by MR.10</b><br>
+        <span class="block mt-1">Call: <a href="tel:+9654373763" class="text-brand-accent underline">+9654373763</a></span>
+        <span class="block">Gmail: <a href="mailto:gc7860010@gmail.com" class="text-brand-aqua underline">gc7860010@gmail.com</a></span>
+      </div>
+      <div class="flex-1 text-right md:text-right">
+        <b class="text-lg">Official Company Overview</b>
+        <p class="text-sm text-gray-300 mt-2">Flozen by MR.10 is a leading, trusted, and officially registered online retailer. We deliver only original, premium gadgets, streetwear, and lifestyle products, prioritizing customer satisfaction, speed, and authenticity above all. Experience the next level of shopping – trusted worldwide since 2021.</p>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-brand-accent/10 pt-6 text-center text-xs text-gray-500">
+      &copy; 2025 Flozen by MR.10. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Settings quick toggle -->
+  <button id="settingsBtn" class="settings-btn" title="Settings" aria-label="Settings">⚙️</button>
+
+  <!-- PWA install prompt area -->
+  <div id="pwaPrompt" class="fixed left-1/2 -translate-x-1/2 bottom:10 z-50 hidden"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+  /***** Utilities: toasts, focus trap, escape html, storage helpers *****/
+  function showToast(message, type='success', ms=3200){
+    const wrap = document.getElementById('toastWrap');
+    const t = document.createElement('div');
+    t.className = 'toast ' + (type||'');
+    t.innerHTML = `<div class="font-bold">${message}</div>`;
+    wrap.appendChild(t);
+    requestAnimationFrame(()=> t.style.opacity='1');
+    setTimeout(()=>{ t.style.transform='translateX(20px)'; t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, ms);
+  }
+
+  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; }); }
+
+  // Focus trap for modals: keep TAB within
+  function trapFocus(modal){
+    const focusable = modal.querySelectorAll('a[href],button,textarea,input,select,[tabindex]:not([tabindex="-1"])');
+    if(!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length-1];
+    function keyHandler(e){
+      if(e.key === 'Tab'){
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      } else if(e.key === 'Escape'){
+        const close = modal.querySelector('.close-modal, .close-login, .close-wishlist, .close-orders, .close-checkout, .close-cart');
+        if(close) close.click();
+      }
+    }
+    modal.addEventListener('keydown', keyHandler);
+    return ()=>modal.removeEventListener('keydown', keyHandler);
+  }
+
+  // Simple local storage helpers
+  const storage = {
+    get(k, def){ try{ return JSON.parse(localStorage.getItem(k)) ?? def; }catch(e){ return def; } },
+    set(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+  };
+
+  /***** Cursor (optimized: rAF scheduled only on movement) *****/
+  let cursorEnabled = storage.get('floz-cursor-enabled', true);
+  const cursorDot = document.getElementById('cursorDot'), cursorOutline = document.getElementById('cursorOutline');
+  function updateCursorDisplay(){
+    if(!cursorEnabled){ cursorDot.style.display='none'; cursorOutline.style.display='none'; document.body.style.cursor='auto'; }
+    else { cursorDot.style.display='block'; cursorOutline.style.display='block'; document.body.style.cursor='none'; }
+  }
+  updateCursorDisplay();
+
+  // schedule rAF only when pointer moves to save CPU
+  let lastX = innerWidth/2, lastY = innerHeight/2;
+  let tickScheduled = false;
+  function scheduleCursorUpdate(){
+    if(tickScheduled) return;
+    tickScheduled = true;
+    requestAnimationFrame(()=> {
+      cursorDot.style.transform = `translate(-50%,-50%) translate(${lastX}px,${lastY}px)`;
+      cursorOutline.style.transform = `translate(-50%,-50%) translate(${lastX}px,${lastY}px)`;
+      tickScheduled = false;
+    });
+  }
+  // Use pointermove and passive listeners where possible
+  document.addEventListener('pointermove', e=>{ lastX = e.clientX; lastY = e.clientY; if(cursorEnabled) scheduleCursorUpdate(); }, {passive:true});
+
+  /***** Loader / GSAP intro (unchanged behaviour but faster timings) *****/
+  const tl = gsap.timeline();
+  tl.to("#loader-text-1", {opacity:1, y:-20, duration:0.7})
+    .to("#loader-text-1", {opacity:0, duration:0.45, delay:0.28})
+    .to("#loader-text-2", {opacity:1, scale:1.2, duration:0.6, ease:"back.out(1.4)"})
+    .to(".loader-overlay", {y:"-100%", duration:0.86, ease:"power4.inOut", delay:0.28})
+    .from(".hero-anim", {y:80, opacity:0, stagger:0.12, duration:0.8}, "-=0.9");
+
+  /***** App State *****/
+  let allProducts = [];
+  let wishlist = storage.get('floz-wishlist', []);
+  let cart = storage.get('floz-cart', {});
+  let orders = storage.get('floz-orders', []);
+  let user = storage.get('floz-user', null);
+  let priceCap = 1000;
+  const coupons = { 'FLO10':{type:'percent',value:10}, 'WELCOME5':{type:'fixed',value:5} };
+
+  function updateCartCount(){
+    const count = Object.values(cart).reduce((a,b)=>a+b,0);
+    const cc = document.getElementById('cart-count');
+    cc.textContent = count; cc.classList.toggle('hidden', !count);
+  }
+  updateCartCount();
+
+  /***** Product loading, filtering, rendering (lighter animations, IntersectionObserver) *****/
+  async function loadProducts(){
+    try{
+      const res = await fetch('https://fakestoreapi.com/products');
+      const products = await res.json();
+      allProducts = products;
+      populateCategoryDropdown();
+      const maxPrice = Math.ceil(Math.max(...products.map(p=>p.price)));
+      document.getElementById('price-range').max = Math.max(50, maxPrice);
+      document.getElementById('price-range-value').textContent = '$' + document.getElementById('price-range').max;
+      document.getElementById('price-range').value = document.getElementById('price-range').max;
+      priceCap = Number(document.getElementById('price-range').value);
+      applyFilters();
+      if(navigator.serviceWorker && navigator.serviceWorker.controller){
+        navigator.serviceWorker.controller.postMessage({type:'cacheProducts', products});
+      }
+    }catch(err){
+      console.error('Failed to load products', err);
+      document.getElementById('products-container').innerHTML = '<div class="text-gray-300 py-12 text-center">Failed to load products. Try again later.</div>';
+    }
+  }
+
+  function populateCategoryDropdown(){
+    const catDropdown = document.getElementById('category-filter');
+    const cats = [...new Set(allProducts.map(p=>p.category))].filter(Boolean);
+    catDropdown.innerHTML = `<option value="">All Categories</option>`;
+    cats.forEach(cat => catDropdown.innerHTML += `<option value="${cat}">${cat.charAt(0).toUpperCase()+cat.slice(1)}</option>`);
+  }
+
+  // debounce filters to avoid heavy re-renders on each keystroke
+  let filterDebounce = null;
+  function applyFilters(){
+    if(filterDebounce) clearTimeout(filterDebounce);
+    filterDebounce = setTimeout(()=> {
+      const search = (document.getElementById('search-input').value || '').toLowerCase();
+      const cat = document.getElementById('category-filter').value;
+      const sort = document.getElementById('sort-select').value;
+      priceCap = Number(document.getElementById('price-range').value || 1000);
+      let filtered = allProducts.filter(p => (!search || p.title.toLowerCase().includes(search) || (p.description||'').toLowerCase().includes(search)) && (!cat || p.category === cat) && p.price <= priceCap);
+      if(sort==='price-asc') filtered.sort((a,b)=>a.price-b.price);
+      else if(sort==='price-desc') filtered.sort((a,b)=>b.price-a.price);
+      else if(sort==='title-asc') filtered.sort((a,b)=>a.title.localeCompare(b.title));
+      else if(sort==='title-desc') filtered.sort((a,b)=>b.title.localeCompare(a.title));
+      else if(sort==='popularity-desc') filtered.sort((a,b)=> (b.rating?.count||0) - (a.rating?.count||0));
+      else if(sort==='popularity-asc') filtered.sort((a,b)=> (a.rating?.count||0) - (b.rating?.count||0));
+      renderProducts(filtered);
+      filterDebounce = null;
+    }, 180);
+  }
+
+  function renderProducts(products){
+    const container = document.getElementById('products-container'); container.innerHTML = '';
+    if(!products.length){ container.innerHTML = '<div class="text-gray-400 py-12 text-center text-lg col-span-full">No products found for these filters.</div>'; return; }
+    const frag = document.createDocumentFragment();
+    products.forEach((prod, idx) => {
+      const liked = wishlist.includes(prod.id) ? 'loved' : '';
+      const popularity = (prod.rating && prod.rating.count > 200) ? `<div class="badge-pop">HOT</div>` : '';
+      const stars = (() => {
+        const r = Math.round(prod.rating?.rate || 0);
+        let s = ''; for(let i=0;i<5;i++) s += `<svg class="inline w-4 h-4 ${i<r? 'text-yellow-300':'text-white/30'}" viewBox="0 0 24 24" fill="${i<r?'currentColor':'none'}" stroke="currentColor"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.786 1.403 8.184L12 18.896l-7.337 3.884 1.403-8.184L.132 9.21l8.2-1.192z"/></svg>`;
+        return s;
+      })();
+
+      const art = document.createElement('article');
+      art.className = 'group glass-card rounded-2xl overflow-hidden cursor-pointer product-card relative reveal';
+      art.setAttribute('role','article');
+      art.setAttribute('aria-labelledby','p'+prod.id+'-title');
+      art.dataset.pid = prod.id;
+      art.dataset.title = prod.title;
+      art.dataset.price = prod.price;
+      art.dataset.img = prod.image;
+      art.dataset.desc = prod.description || '';
+
+      art.innerHTML = `
+          ${popularity}
+          <button class="wishlist-btn ${liked}" title="Add to wishlist" data-pid="${prod.id}" aria-pressed="${liked? 'true':'false'}">${liked?'❤':'♡'}</button>
+          <div class="h-72 overflow-hidden relative">
+            <img src="${prod.image}" class="w-full h-full object-cover img-zoom transition duration-300" loading="lazy" alt="${escapeHtml(prod.title)}">
+          </div>
+          <div class="p-6 flex flex-col items-start">
+            <h3 id="p${prod.id}-title" class="text-lg font-bold mb-1 text-gradient">${escapeHtml(prod.title.split(' ').slice(0,6).join(' '))}</h3>
+            <div class="flex items-center gap-3 mb-2">
+              <p class="text-brand-accent text-lg font-bold">$${prod.price.toFixed(2)}</p>
+              <div class="text-xs text-gray-300 flex items-center gap-2">${stars}<span class="text-gray-400">(${prod.rating?.count||0})</span></div>
+            </div>
+            <div class="details">${escapeHtml((prod.description||'').substring(0,120))}${(prod.description||'').length>120?'...':''}</div>
+            <div class="w-full mt-4 flex gap-3">
+              <button class="w-1/2 btn-glo font-bold py-2 rounded-xl text-white shadow buy-now" data-pid="${prod.id}">BUY NOW</button>
+              <div class="w-1/2 flex gap-2">
+                <input type="number" min="1" value="1" class="w-1/2 bg-white/6 rounded px-2 qty-input" data-pid="${prod.id}">
+                <button class="w-1/2 border border-white/8 rounded-xl py-2 text-sm text-gray-200 add-cart" data-pid="${prod.id}">Add</button>
+              </div>
+            </div>
+          </div>
+      `;
+      frag.appendChild(art);
+    });
+    container.appendChild(frag);
+
+    // Event delegation: attach a few handlers at container level to reduce listeners
+    container.querySelectorAll('.wishlist-btn').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const pid = +btn.dataset.pid;
+        if(wishlist.includes(pid)){ wishlist = wishlist.filter(id=>id!==pid); btn.classList.remove('loved'); btn.innerText='♡'; btn.setAttribute('aria-pressed','false'); showToast('Removed from wishlist','warn'); }
+        else { wishlist.push(pid); btn.classList.add('loved'); btn.innerText='❤'; btn.setAttribute('aria-pressed','true'); showToast('Added to wishlist','success'); }
+        storage.set('floz-wishlist', wishlist);
+      }, {passive:false});
+    });
+
+    container.querySelectorAll('.add-cart').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const pid = btn.dataset.pid;
+        const qtyInput = container.querySelector('.qty-input[data-pid="'+pid+'"]');
+        const q = Math.max(1, Number(qtyInput?.value || 1));
+        cart[pid] = (cart[pid]||0) + q;
+        storage.set('floz-cart', cart);
+        updateCartCount();
+        showToast('Added to cart','success');
+      });
+    });
+
+    container.querySelectorAll('.buy-now').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const card = btn.closest('.product-card');
+        openOrderModal(card);
+      });
+    });
+
+    // open modal on card click
+    container.querySelectorAll('.product-card').forEach(card=>{
+      card.addEventListener('click', e=>{
+        if(e.target.closest('.buy-now') || e.target.closest('.wishlist-btn') || e.target.closest('.add-cart') || e.target.closest('.qty-input')) return;
+        showModal(card.dataset.img, card.dataset.title, card.dataset.price, card.dataset.desc || '');
+      });
+    });
+
+    // IntersectionObserver-driven reveal animation (lightweight)
+    const observer = new IntersectionObserver((entries, obs)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){ en.target.classList.add('visible'); obs.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold: 0.06});
+    container.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+  }
+
+  /***** Modal helpers and events *****/
+  function openModal(modal, focusSelector){
+    modal.style.display='flex'; modal.setAttribute('aria-hidden','false');
+    const removeTrap = trapFocus(modal);
+    setTimeout(()=>{ const el = modal.querySelector(focusSelector)||modal.querySelector('button, a, input'); if(el) el.focus(); },80);
+    return removeTrap;
+  }
+  function closeModal(modal){
+    modal.style.display='none'; modal.setAttribute('aria-hidden','true');
+  }
+
+  const productModal = document.getElementById('product-modal'), loginModal = document.getElementById('login-modal'), wishlistModal = document.getElementById('wishlist-modal'), ordersModal = document.getElementById('orders-modal'), checkoutModal = document.getElementById('checkout-modal');
+  document.querySelectorAll('.close-modal').forEach(b=>b.addEventListener('click', ()=>closeModal(productModal)));
+  document.querySelectorAll('.close-login').forEach(b=>b.addEventListener('click', ()=>closeModal(loginModal)));
+  document.querySelectorAll('.close-wishlist').forEach(b=>b.addEventListener('click', ()=>closeModal(wishlistModal)));
+  document.querySelectorAll('.close-orders').forEach(b=>b.addEventListener('click', ()=>closeModal(ordersModal)));
+  document.querySelectorAll('.close-checkout').forEach(b=>b.addEventListener('click', ()=>closeModal(checkoutModal)));
+  document.getElementById('close-cart').addEventListener('click', ()=>{ document.getElementById('cart-sidebar').style.transform="translateX(100%)"; document.getElementById('cart-sidebar').setAttribute('aria-hidden','true'); });
+
+  [productModal, loginModal, wishlistModal, ordersModal, checkoutModal].forEach(m=>{
+    m.addEventListener('click', e=>{ if(e.target===m){ closeModal(m); } });
+  });
+
+  // keyboard global for escape and shortcuts
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){ [productModal, loginModal, wishlistModal, ordersModal, checkoutModal].forEach(m=>{ if(m.style.display==='flex') closeModal(m); }); }
+    if(e.key==='/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){ e.preventDefault(); document.getElementById('search-input').focus(); }
+    if(e.key.toLowerCase()==='w' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){ e.preventDefault(); document.getElementById('open-wishlist').click(); }
+  });
+
+  /***** Product modal actions (incl lightbox) *****/
+  let currentModalQty = 1;
+  function openOrderModal(card){
+    document.getElementById('product-modal').style.display='flex';
+    document.getElementById('product-modal').setAttribute('aria-hidden','false');
+    const img = card.dataset.img, title = card.dataset.title, price = card.dataset.price, desc = card.dataset.desc;
+    document.getElementById('modal-img').src = img;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-price').textContent = "$" + Number(price).toFixed(2);
+    document.getElementById('modal-desc').textContent = desc;
+    currentModalQty = 1; document.getElementById('qty').textContent = currentModalQty;
+    document.getElementById('modal-whatsapp').onclick = ()=> window.open(`https://wa.me/+9654373763?text=${encodeURIComponent(`Hello, I'd like to order ${title} x${currentModalQty} ($${price} each).`)}`, '_blank');
+    document.getElementById('modal-gmail').onclick = ()=> window.open(`mailto:gc7860010@gmail.com?subject=${encodeURIComponent('Order: '+title)}&body=${encodeURIComponent(`Order: ${title}\nQty: ${currentModalQty}\nRate: $${price}`)}`, '_blank');
+    document.getElementById('incr-qty').onclick = ()=>{ currentModalQty++; document.getElementById('qty').textContent = currentModalQty; };
+    document.getElementById('decr-qty').onclick = ()=>{ if(currentModalQty>1) currentModalQty--; document.getElementById('qty').textContent = currentModalQty; };
+    document.getElementById('modal-img').onclick = ()=> openLightbox(img);
+  }
+
+  function showModal(img, title, price, desc){
+    document.getElementById('modal-img').src = img;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-price').textContent = "$" + Number(price).toFixed(2);
+    document.getElementById('modal-desc').textContent = desc;
+    currentModalQty = 1; document.getElementById('qty').textContent = 1;
+    document.getElementById('product-modal').style.display='flex';
+    document.getElementById('product-modal').setAttribute('aria-hidden','false');
+  }
+
+  /***** Lightbox implementation (custom, simple) *****/
+  const lightbox = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lbPrev = document.getElementById('lbPrev'), lbNext = document.getElementById('lbNext');
+  let lbList = [], lbIndex = 0;
+  function populateLbList(){
+    lbList = Array.from(document.querySelectorAll('#products-container img')).map(img=>img.src);
+  }
+  function openLightbox(src){
+    populateLbList();
+    lbIndex = lbList.indexOf(src); if(lbIndex<0) lbIndex=0;
+    lbImg.src = lbList[lbIndex];
+    lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeLightbox(){ lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  function lbPrevFn(){ lbIndex = (lbIndex-1+lbList.length)%lbList.length; lbImg.src = lbList[lbIndex]; }
+  function lbNextFn(){ lbIndex = (lbIndex+1)%lbList.length; lbImg.src = lbList[lbIndex]; }
+  lbPrev.addEventListener('click', lbPrevFn); lbNext.addEventListener('click', lbNextFn);
+  lightbox.addEventListener('click', e=>{ if(e.target===lightbox || e.target===lbImg) closeLightbox(); });
+  document.addEventListener('keydown', e=>{ if(lightbox.classList.contains('open')){ if(e.key==='ArrowLeft') lbPrevFn(); if(e.key==='ArrowRight') lbNextFn(); if(e.key==='Escape') closeLightbox(); }});
+
+  /***** Wishlist, Orders UI *****/
+  document.getElementById('open-wishlist').addEventListener('click', ()=>{
+    updateWishlistModal(); wishlistModal.style.display='flex'; wishlistModal.setAttribute('aria-hidden','false');});
+  function updateWishlistModal(){
+    const list = document.getElementById('wishlist-list'); if(!wishlist.length){ list.innerHTML='<div class="text-gray-400 py-12 text-center">Your wishlist is empty.</div>'; return; }
+    let out=''; wishlist.forEach(pid=>{
+      const p = allProducts.find(x=>x.id==pid);
+      if(!p) return;
+      out+=`<div class="flex gap-4 items-center border-b border-white/10 py-4"><img src="${p.image}" class="w-16 h-16 rounded-xl object-cover"><div class="flex-1"><div class="font-bold text-gradient">${escapeHtml(p.title)}</div><div class="text-brand-accent font-bold">$${p.price}</div></div><button class="btn-glo px-3 py-2" onclick="addToCart(${p.id})">Add to cart</button><button class="ml-3 text-2xl text-red-400" onclick="removeWishlist(${p.id})" title="Remove">✕</button></div>`;
+    }); list.innerHTML = out;
+  }
+  window.removeWishlist = function(pid){ wishlist = wishlist.filter(id=>id!==pid); storage.set('floz-wishlist', wishlist); updateWishlistModal(); applyFilters(); showToast('Removed from wishlist','warn'); };
+
+  /***** Cart functions (add/update/remove/show) *****/
+  window.addToCart = function(pid){
+    cart[pid] = (cart[pid]||0) + 1; storage.set('floz-cart', cart); updateCartCount(); showToast('Added to cart','success');
+  };
+  window.removeFromCart = function(pid){ delete cart[pid]; storage.set('floz-cart', cart); showCart(); showToast('Removed from cart','warn'); };
+  window.updateQty = function(pid, dir){ if(cart[pid]) cart[pid] = Math.max(1, cart[pid]+dir); storage.set('floz-cart', cart); showCart(); };
+
+  document.getElementById('open-cart').addEventListener('click', showCart);
+  function showCart(){
+    const cl = document.getElementById('cart-list'); cl.innerHTML=''; let total=0;
+    const products = allProducts.length? allProducts: [];
+    Object.keys(cart).forEach(pid=>{
+      const prod = products.find(p=>p.id==pid);
+      if(!prod) return;
+      const subtotal = prod.price * cart[pid];
+      total += subtotal;
+      cl.innerHTML += `<div class="flex items-center gap-4 border-b border-white/10 py-4"><img src="${prod.image}" class="w-14 h-14 object-cover rounded-xl"><div class="flex-1"><div class="font-bold text-gradient">${escapeHtml(prod.title.split(' ').slice(0,3).join(' '))}</div><div class="flex items-center gap-2 mt-1"><span class="text-sm text-gray-200">${cart[pid]} x $${prod.price}</span><button class="ml-3 btn-glo px-2" onclick="updateQty(${prod.id},1)">+</button><button class="btn-glo px-2" onclick="updateQty(${prod.id},-1)">-</button><button class="ml-2 text-red-400" onclick="removeFromCart(${prod.id})">Remove</button></div></div><div class="font-bold text-base">$${subtotal.toFixed(2)}</div></div>`;
+    });
+    document.getElementById('cart-subtotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('cart-sidebar').style.transform = 'translateX(0%)'; document.getElementById('cart-sidebar').setAttribute('aria-hidden','false');
+    updateCartCount();
+  }
+
+  /***** Checkout flow (client-only) *****/
+  document.getElementById('checkout-btn').addEventListener('click', ()=> openCheckout());
+  function openCheckout(){
+    const checkoutItems = document.getElementById('checkout-items'); checkoutItems.innerHTML='';
+    const products = allProducts.length ? allProducts : [];
+    let subtotal = 0;
+    Object.keys(cart).forEach(pid=>{
+      const p = products.find(x=>x.id==pid);
+      if(p){
+        const qty = cart[pid]; const line = p.price * qty; subtotal += line;
+        checkoutItems.innerHTML += `<div class="flex justify-between"><div><b>${escapeHtml(p.title)}</b> <span class="text-gray-400">x${qty}</span></div><div>$${line.toFixed(2)}</div></div>`;
+      }
+    });
+    document.getElementById('checkout-total').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('checkout-email').value = user?.email || '';
+    document.getElementById('checkout-phone').value = '';
+    document.getElementById('checkout-modal').style.display='flex'; document.getElementById('checkout-modal').setAttribute('aria-hidden','false');
+  }
+
+  document.getElementById('place-order').addEventListener('click', placeOrder);
+  document.getElementById('order-whatsapp').addEventListener('click', ()=> placeOrder('wa'));
+  document.getElementById('order-mail').addEventListener('click', ()=> placeOrder('mail'));
+  document.getElementById('apply-coupon').addEventListener('click', ()=>{
+    const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+    if(!code || !coupons[code]){ showToast('Invalid coupon','error'); return; }
+    let subtotal = 0; allProducts.forEach(p=>{ if(cart[p.id]) subtotal += p.price * cart[p.id]; });
+    const c = coupons[code]; let newTotal = subtotal;
+    if(c.type==='percent'){ newTotal = subtotal * (1 - c.value/100); }
+    else if(c.type==='fixed'){ newTotal = Math.max(0, subtotal - c.value); }
+    document.getElementById('cart-subtotal').textContent = '$' + newTotal.toFixed(2);
+    showToast('Coupon applied','success');
+  });
+
+  function placeOrder(channel){
+    const products = allProducts.length ? allProducts : [];
+    const items = [];
+    let subtotal = 0;
+    Object.keys(cart).forEach(pid=>{
+      const p = products.find(x=>x.id==pid); if(!p) return;
+      items.push({id:p.id,title:p.title,qty:cart[pid],rate:p.price});
+      subtotal += p.price * cart[pid];
+    });
+    if(!items.length){ showToast('Cart empty','error'); return; }
+    const email = document.getElementById('checkout-email').value.trim();
+    const phone = document.getElementById('checkout-phone').value.trim();
+    const coupon = document.getElementById('checkout-coupon').value.trim().toUpperCase();
+    let total = subtotal; if(coupons[coupon]){ const c = coupons[coupon]; if(c.type==='percent') total = subtotal * (1 - c.value/100); else total = Math.max(0, subtotal - c.value); }
+    const order = { id: 'ORD' + Date.now(), items, subtotal, total, email, phone, coupon, created_at: new Date().toISOString() };
+    orders.unshift(order); storage.set('floz-orders', orders);
+    if(email) { user = { email }; storage.set('floz-user', user); }
+    cart = {}; storage.set('floz-cart', cart); updateCartCount();
+    showToast('Order placed (demo)','success');
+    closeModal(checkoutModal);
+    const summary = `Order ${order.id}%0AItems:%0A${items.map(it=>`${it.title} x${it.qty} @ $${it.rate}`).join('%0A')}%0ATotal: $${order.total.toFixed(2)}%0AEmail: ${email || 'N/A'}`;
+    if(channel==='wa') window.open(`https://wa.me/+9654373763?text=${encodeURIComponent(summary)}`, '_blank');
+    else if(channel==='mail') window.open(`mailto:gc7860010@gmail.com?subject=${encodeURIComponent('Order '+order.id)}&body=${encodeURIComponent(summary)}`, '_blank');
+  }
+
+  document.getElementById('open-orders').addEventListener('click', ()=>{ updateOrdersModal(); ordersModal.style.display='flex'; ordersModal.setAttribute('aria-hidden','false'); });
+  document.getElementById('viewOrdersBtn')?.addEventListener('click', ()=>{ updateOrdersModal(); ordersModal.style.display='flex'; ordersModal.setAttribute('aria-hidden','false'); closeModal(loginModal); });
+  function updateOrdersModal(){
+    const out = document.getElementById('orders-list');
+    if(!orders.length){ out.innerHTML = '<div class="text-gray-400 py-12 text-center">No orders yet.</div>'; return; }
+    out.innerHTML = orders.map(o=>`<div class="border-b border-white/10 py-4"><div class="flex justify-between items-center"><div><b>${o.id}</b><div class="text-xs text-gray-400">${new Date(o.created_at).toLocaleString()}</div></div><div><b>$${o.total.toFixed(2)}</b></div></div><div class="text-sm text-gray-300 mt-2">${o.items.map(i=>escapeHtml(i.title)+' x'+i.qty).join(', ')}</div></div>`).join('');
+  }
+
+  /***** Login / Profile handling *****/
+  document.getElementById('open-login').addEventListener('click', ()=> {
+    if(user){
+      document.getElementById('login-form').style.display='none';
+      document.getElementById('profileView').style.display='block';
+      document.getElementById('profileEmail').textContent = user.email;
+    } else {
+      document.getElementById('login-form').style.display='flex';
+      document.getElementById('profileView').style.display='none';
+    }
+    loginModal.style.display='flex'; loginModal.setAttribute('aria-hidden','false');
+  });
+
+  document.getElementById('login-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    const email = document.getElementById('user-email').value.trim().toLowerCase();
+    storage.set('floz-user', {email}); user = {email}; document.getElementById('login-form').reset(); closeModal(loginModal); showToast('Logged in (demo)','success');
+  });
+  document.getElementById('logoutBtn')?.addEventListener('click', ()=>{ storage.set('floz-user', null); user=null; closeModal(loginModal); showToast('Logged out','warn'); });
+
+  /***** Settings button (cursor toggle & PWA install) *****/
+  document.getElementById('settingsBtn').addEventListener('click', ()=>{
+    const menu = document.createElement('div'); menu.className='glass p-4 rounded-lg shadow-lg'; menu.style.position='fixed'; menu.style.left='1.25rem'; menu.style.bottom='4.5rem'; menu.style.zIndex=99999;
+    menu.innerHTML = `<div class="flex flex-col gap-2 text-sm"><label><input type="checkbox" id="toggleCursor"> Enable custom cursor</label><label><input type="checkbox" id="autoInstall"> Prompt install if available</label><button id="clearCache" class="mt-2 btn-glo px-3 py-2 rounded">Clear local data</button></div>`;
+    document.body.appendChild(menu);
+    document.getElementById('toggleCursor').checked = cursorEnabled;
+    document.getElementById('toggleCursor').addEventListener('change', e=>{ cursorEnabled = e.target.checked; storage.set('floz-cursor-enabled', cursorEnabled); updateCursorDisplay(); showToast('Cursor ' + (cursorEnabled?'enabled':'disabled'),'success'); });
+    document.getElementById('clearCache').addEventListener('click', ()=>{ localStorage.clear(); showToast('Local storage cleared','warn'); setTimeout(()=>location.reload(),600); });
+    setTimeout(()=>{ document.addEventListener('click', function rm(e){ if(!menu.contains(e.target)){ menu.remove(); document.removeEventListener('click', rm); } }); },50);
+  });
+
+  /***** Startup wiring *****/
+  window.addEventListener('DOMContentLoaded', ()=>{
+    ['search-input','category-filter','sort-select'].forEach(id => document.getElementById(id).addEventListener('input', applyFilters));
+    document.getElementById('price-range').addEventListener('input', e=>{ document.getElementById('price-range-value').textContent = '$' + e.target.value; applyFilters(); });
+    document.getElementById('open-wishlist').addEventListener('click', e=>{ e.preventDefault(); });
+    loadProducts();
+  });
+
+  /***** PWA: Dynamic manifest + Service Worker registration via blob *****/
+  (function createManifest(){
+    const manifest = {
+      name: "Flozen by MR.10",
+      short_name: "Flozen",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#000000",
+      theme_color: "#7A5CFF",
+      icons: [
+        { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 24 24'%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='10' fill='%23ffffff'%3EFZ%3C/text%3E%3C/svg%3E", sizes:"192x192", type:"image/svg+xml" }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = url; document.head.appendChild(link);
+  })();
+
+  (function registerSW(){
+    if(!('serviceWorker' in navigator)) return;
+    const swCode = `
+      const CACHE_NAME = 'flozen-shell-v1';
+      const ASSETS = ['/', location.pathname];
+      self.addEventListener('install', e=>{ self.skipWaiting(); e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS)).catch(()=>{})); });
+      self.addEventListener('activate', e=>{ e.waitUntil(self.clients.claim()); });
+      self.addEventListener('fetch', e=>{
+        const url = new URL(e.request.url);
+        if(url.origin.includes('fakestoreapi.com') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.png') || url.pathname.endsWith('.webp')){
+          e.respondWith(fetch(e.request).then(r=>{ const clone = r.clone(); caches.open(CACHE_NAME).then(c=>c.put(e.request, clone)); return r; }).catch(()=>caches.match(e.request)));
+        } else {
+          e.respondWith(caches.match(e.request).then(res=>res || fetch(e.request).catch(()=>caches.match('/'))));
+        }
+      });
+      self.addEventListener('message', event=>{
+        if(event.data && event.data.type === 'cacheProducts' && event.data.products){
+          caches.open(CACHE_NAME).then(cache=>{
+            (event.data.products||[]).forEach(p=>{
+              if(p.image) try{ cache.add(p.image).catch(()=>{}); }catch(e){}
+            });
+          });
+        }
+      });
+    `;
+    const blob = new Blob([swCode], {type:'text/javascript'});
+    const swURL = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swURL).then(reg=>{ console.log('SW registered', reg); }).catch(err=>console.warn('SW failed', err));
+  })();
+
+  // back to top (graceful)
+  const backToTop = document.getElementById('backToTop') || (function(){ const b = document.createElement('button'); b.id='backToTop'; b.className='back-to-top'; b.style.display='none'; b.innerHTML='↑'; document.body.appendChild(b); return b; })();
+  window.addEventListener('scroll', ()=>{ if(window.scrollY>400) backToTop.style.display='flex'; else backToTop.style.display='none'; });
+  backToTop.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
+
+  // restore from storage
+  (function restoreFromStorage(){ wishlist = storage.get('floz-wishlist',[]); cart = storage.get('floz-cart',{}); orders = storage.get('floz-orders',[]); user = storage.get('floz-user', null); updateCartCount(); })();
+
+  // lightweight nav blur on scroll (optimized)
+  let lastKnownScroll = 0;
+  let tickingNav = false;
+  window.addEventListener('scroll', ()=> {
+    lastKnownScroll = window.scrollY;
+    if(!tickingNav){
+      requestAnimationFrame(()=> {
+        const nav = document.getElementById('main-nav');
+        if(lastKnownScroll > 40) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+        tickingNav = false;
+      });
+      tickingNav = true;
+    }
+  }, {passive:true});
+
+  </script>
+</body>
+</html>
